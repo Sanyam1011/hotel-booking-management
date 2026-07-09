@@ -1,0 +1,11 @@
+{
+  "installCommand": "npm install --prefix hotel-booking-frontend",
+  "buildCommand": "npm run build --prefix hotel-booking-frontend",
+  "outputDirectory": "hotel-booking-frontend/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

@@ -522,14 +522,13 @@ Template: `.env.local.example`
 
 ### Frontend — Vercel
 
-- **Config:** `hotel-booking-frontend/vercel.json`
+- **Config:** `hotel-booking-frontend/vercel.json` (and root `vercel.json` for monorepo routing)
 - Build: `npm run build` → `dist/`
 - SPA rewrite: all routes → `index.html`
-- Env: `VITE_API_BASE_URL=https://hotel-booking-backend.duckdns.org`
 
 ### Backend — Docker / Coolify
 
-- **Dockerfile:** `hotel-booking-backend/Dockerfile` (build from repo root — includes `shared/`)
+- **Dockerfile:** `Dockerfile` (root level — configured to build from the repo root to include `shared/`)
 - Runtime: `node dist/hotel-booking-backend/src/index.js`
 - Set `PORT` in Coolify (e.g. 3000); map host port as needed
 - Health: `GET /api/health`
@@ -537,6 +536,29 @@ Template: `.env.local.example`
 ### CORS
 
 Backend allows production frontends (`vercel.app`, `netlify.app`) and `FRONTEND_URL` from env.
+
+### Troubleshooting: "Root directory 'hotel-booking-managment' does not exist"
+
+If your hosting provider (e.g., Render, Vercel, etc.) fails to build and displays an error such as:
+`Root directory "hotel-booking-managment" does not exist. Verify the Root Directory configured in your service settings.`
+
+This is because the deployment dashboard is configured to look for a folder with a typo (`hotel-booking-managment`), but the actual subdirectories are:
+1. `hotel-booking-frontend` (React/Vite client application)
+2. `hotel-booking-backend` (Node/Express API application)
+
+**Solution for Frontend (Vercel / Render Static Site):**
+Set the **Root Directory** setting in your frontend service settings to exactly:
+```text
+hotel-booking-frontend
+```
+
+**Solution for Backend Docker Build (Render Web Service):**
+Because the backend requires access to the peer folder `shared/` to load TypeScript types, the **Docker build context must be the root of the repository**, not the `hotel-booking-backend` folder. If you set the Root Directory to `hotel-booking-backend`, Docker will fail with `COPY shared ./shared: not found`.
+
+To solve this:
+1. In your backend Web Service settings on Render, set **Root Directory** to empty (or leave it blank, which defaults to the repository root `/`).
+2. We have created a root-level [Dockerfile](file:///d:/Hotel-Booking-Management-System--React-MERN-FullStack/Dockerfile) in the repository. Leave the **Dockerfile Path** setting on Render to its default (`Dockerfile`), or set it to `Dockerfile`.
+This instructs Render to start the build context at the repository root and use the root Dockerfile, allowing `shared` and `hotel-booking-backend` to build successfully with zero custom settings.
 
 ---
 
