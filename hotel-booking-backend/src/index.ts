@@ -125,6 +125,8 @@ const allowedOrigins = [
   "https://mern-booking-hotel.netlify.app/",
   "https://hotel-mern-booking.vercel.app",
   "https://hotel-mern-booking.vercel.app/",
+  "https://hotel-booking-management-txid.vercel.app",
+  "https://hotel-booking-management-txid.vercel.app/",
 ].filter((origin): origin is string => Boolean(origin));
 app.use(
   cors({

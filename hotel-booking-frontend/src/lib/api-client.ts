@@ -8,6 +8,13 @@ const getBaseURL = () => {
   }
 
   if (
+    window.location.hostname === "hotel-booking-management-txid.vercel.app" ||
+    window.location.hostname === "hotel-booking-management-6s7e.onrender.com"
+  ) {
+    return "https://hotel-booking-management-6s7e.onrender.com";
+  }
+
+  if (
     window.location.hostname === "mern-booking-hotel.netlify.app" ||
     window.location.hostname.includes("vercel.app")
   ) {
